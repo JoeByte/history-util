@@ -16,6 +16,11 @@
 // Jcurl::$cookie = 'uid=229165395; _is_admin=1;';
 // $output = Jcurl::get('http://www.uacool.com/229165395');
 // Jcurl::writeFile($output);
+// Use Exp No.2
+// Jcurl::$cookie_file = 'cookie';
+// $postData = array("username" => "user", "password" => "pass");
+// $output = Jcurl::post('http://www.uacool.com', $postData);
+// Jcurl::writeFile($output);
 class Jcurl
 {
 
@@ -57,6 +62,9 @@ class Jcurl
             CURLOPT_MAXREDIRS => 10
         );
         curl_setopt_array(self::$curl, $option);
+        if (self::$cookie_file && ! file_exists(self::$cookie_file)) {
+            curl_setopt(self::$curl, CURLOPT_COOKIEJAR, self::$cookie_file);
+        }
         return self::$curl;
     }
 
@@ -68,7 +76,13 @@ class Jcurl
     private static function go()
     {
         self::$output = curl_exec(self::$curl);
+        if (self::$output === FALSE) {
+            echo 'cURL Error: ' . curl_error(self::$curl);
+        } else {
+            // $info = curl_getinfo(self::$curl);
+        }
         curl_close(self::$curl);
+        self::$curl = '';
         return self::$output;
     }
 
@@ -119,16 +133,5 @@ class Jcurl
         curl_setopt(self::$curl, CURLOPT_POST, TRUE);
         curl_setopt(self::$curl, CURLOPT_POSTFIELDS, self::$postData);
         return self::go();
-    }
-
-    /**
-     * Save Cookies And Ensure The Path Could Be Write
-     *
-     * @param string $path            
-     */
-    public static function saveCookie($path = '/home/_JcurlCookie')
-    {
-        self::init();
-        curl_setopt(self::$curl, CURLOPT_COOKIEJAR, $path);
     }
 }
