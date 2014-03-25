@@ -4,22 +4,22 @@
  * Jcurl Operation Class
  * Jcurl IS USED TO REQUEST URL OR POST DATAS
  *
- * @package Uacool/Jcurl
- * @author thendfeel@gmail.com
- * @link https://github.com/thendfeel/Uacool
- * @example http://dev.uacool.com
- * @copyright uacool.com
- * @created 2014-01-16
+ * @package     xxtime/Jcurl
+ * @author      joe@xxtime.com
+ * @link        https://github.com/thendfeel/xxtime
+ * @example     http://dev.xxtime.com
+ * @copyright   xxtime.com
+ * @created     2014-01-16
  */
 
 // Use Exp
 // Jcurl::$cookie = 'uid=229165395; _is_admin=1;';
-// $output = Jcurl::get('http://www.uacool.com/229165395');
+// $output = Jcurl::get('http://www.xxtime.com/229165395');
 // Jcurl::writeFile($output);
 // Use Exp No.2
 // Jcurl::$cookie_file = 'cookie';
 // $postData = array("username" => "user", "password" => "pass");
-// $output = Jcurl::post('http://www.uacool.com', $postData);
+// $output = Jcurl::post('http://www.xxtime.com', $postData);
 // Jcurl::writeFile($output);
 class Jcurl
 {
@@ -135,3 +135,6 @@ class Jcurl
         return self::go();
     }
 }
+
+
+/* End of file Jmysql.php */

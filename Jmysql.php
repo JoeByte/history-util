@@ -5,12 +5,12 @@
  * Jmysql IS USED TO OPERAT MYSQL
  * 需要PHP的PDO拓展支持
  *
- * @package Uacool/Jmysql.class
- * @author thendfeel@gmail.com
- * @link https://github.com/thendfeel/Uacool
- * @example http://dev.uacool.com
- * @copyright uacool.com
- * @created 2014-02-26
+ * @package     xxtime/Jmysql.class
+ * @author      joe@xxtime.com
+ * @link        https://github.com/thendfeel/xxtime
+ * @example     http://dev.xxtime.com
+ * @copyright   xxtime.com
+ * @created     2014-02-26
  */
 
 /*
@@ -30,7 +30,7 @@ $config = array(
 // $ret4 = $db->fetchOne('user', 'id = 1', array('id', 'name'));
 
 // USE EXAMPLE NO.2 # INSERT
-// $ret5 = $db->insert('user', array('name' => 'uacool', 'age' => 26));
+// $ret5 = $db->insert('user', array('name' => 'xxtime', 'age' => 26));
 
 // USE EXAMPLE NO.3 # UPDATE
 // $db->pk = 'student_id'; // 设置主键 默认为id
@@ -278,3 +278,6 @@ class Jmysql
         return $where;
     }
 }
+
+
+/* End of file Jmysql.php */

@@ -4,12 +4,12 @@
  * 本程序可根据cookie爬取人人网用户信息
  * 本例使用simple_html_dom.php作为html分析程序， 以DataSource.html文件为目标源文件
  *
- * @package Uacool/Simple/Jcrawler_renren.php
- * @author thendfeel@gmail.com
- * @link https://github.com/thendfeel/Uacool
- * @example http://dev.uacool.com
- * @copyright uacool.com
- * @created 2014-02-25
+ * @package     xxtime/Simple/Jcrawler_renren.php
+ * @author      joe@xxtime.com
+ * @link        https://github.com/thendfeel/xxtime
+ * @example     http://dev.xxtime.com
+ * @copyright   xxtime.com
+ * @created     2014-02-25
  */
 include '../simple_html_dom.php';
 include '../Jcurl.php';

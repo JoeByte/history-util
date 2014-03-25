@@ -4,11 +4,11 @@
  * Jssh2 Operation Class
  * Jssh2 IS USED TO EXECUTE COMMAND IN REMOTE SERVERS
  *
- * @package     Uacool/Jssh2
- * @author      thendfeel@gmail.com
- * @link        https://github.com/thendfeel/Uacool
- * @example     http://dev.uacool.com
- * @copyright   uacool.com
+ * @package     xxtime/Jssh2
+ * @author      joe@xxtime.com
+ * @link        https://github.com/thendfeel/xxtime
+ * @example     http://dev.xxtime.com
+ * @copyright   xxtime.com
  * @created     2014-01-11
  */
 class Jssh2
@@ -86,3 +86,6 @@ class Jssh2
         return self::ssh_shell($cmds);
     }
 }
+
+
+/* End of file Jmysql.php */
