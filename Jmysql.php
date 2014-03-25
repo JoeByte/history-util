@@ -140,11 +140,7 @@ class Jmysql
      */
     public function update($table, $conditions, $data)
     {
-        if (is_int($conditions)) {
-            $where = "`$this->pk`='$conditions'";
-        } else {
-            $where = $this->where($conditions);
-        }
+        $where = $this->where($conditions);
         if (is_array($data)) {
             $set = $this->built($data, ',');
         } else {
@@ -162,11 +158,7 @@ class Jmysql
 
     public function delete($table, $conditions)
     {
-        if (is_int($conditions)) {
-            $where = "`$this->pk`='$conditions'";
-        } else {
-            $where = $this->where($conditions);
-        }
+        $where = $this->where($conditions);
         $sql = "DELETE FROM `$table` WHERE $where";
         return $this->execute($sql);
     }
@@ -276,7 +268,9 @@ class Jmysql
      */
     private function where($conditions)
     {
-        if (is_array($conditions)) {
+        if (is_int($conditions)) {
+            $where = "`$this->pk`='$conditions'";
+        } elseif (is_array($conditions)) {
             $where = $this->built($conditions);
         } else {
             $where = $conditions;
