@@ -16,13 +16,28 @@
  * 写日志文件
  * Write File
  */
-function writeFile($text = '', $fileName = 'log.txt')
+function write_file($text = '', $fileName = 'log.txt')
 {
     $fileName = dirname(__FILE__) . '/' . $fileName;
     $handle = fopen($fileName, "a+b");
     $text .= "\r\n";
     fwrite($handle, $text);
     fclose($handle);
+}
+
+/**
+ * 创建随机字符串
+ * Create Random String
+ */
+function gen_random($length = 8)
+{
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $string = '';
+    for ($i = 0; $i < $length; $i ++) {
+        // $string .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+        $string .= $chars[mt_rand(0, strlen($chars) - 1)];
+    }
+    return $string;
 }
 
 /**
