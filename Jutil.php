@@ -13,6 +13,19 @@
  */
 
 /**
+ * 写日志文件
+ * Write File
+ */
+function writeFile($text = '', $fileName = 'log.txt')
+{
+    $fileName = dirname(__FILE__) . '/' . $fileName;
+    $handle = fopen($fileName, "a+b");
+    $text .= "\r\n";
+    fwrite($handle, $text);
+    fclose($handle);
+}
+
+/**
  * print_r For Html Page Debug Output
  * 调试函数
  */
