@@ -88,4 +88,4 @@ class Jssh2
 }
 
 
-/* End of file Jmysql.php */
+/* End of file Jssh2.php */
