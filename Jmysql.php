@@ -62,7 +62,7 @@ class Jmysql
         $this->init();
     }
 
-    function __destruct()
+    public function __destruct()
     {
         $this->debug();
     }
