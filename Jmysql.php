@@ -268,7 +268,9 @@ class Jmysql
      */
     private function where($conditions)
     {
-        if (is_int($conditions)) {
+        if (empty($conditions)) {
+            $where = '1=1';
+        } elseif (is_int($conditions)) {
             $where = "`$this->pk`='$conditions'";
         } elseif (is_array($conditions)) {
             $where = $this->built($conditions);
