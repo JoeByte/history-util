@@ -13,15 +13,7 @@
  * @created     2014-02-26
  */
 
-/*
-$config = array(
-    'host' => '127.0.0.1',
-    'port' => '3306',
-    'dbname' => 'db_test',
-    'user' => 'root',
-    'password' => '123456'
-);
-*/
+// $config = array( 'host' => '127.0.0.1', 'port' => '3306', 'dbname' => 'db_test', 'user' => 'root', 'password' => '123456' );
 // $db = new Jmysql($config);
 // USE EXAMPLE NO.1 # FIND
 // $ret1 = $db->fetchAll('user', array('id' => 1), 'id, name');
@@ -56,7 +48,11 @@ class Jmysql
 
     public $pk = 'id';
 
+    public $debug = FALSE;
+
     private $db;
+
+    private $sql;
 
     public function __construct($config = array())
     {
@@ -64,6 +60,11 @@ class Jmysql
             $this->$key = $value;
         }
         $this->init();
+    }
+
+    function __destruct()
+    {
+        $this->debug();
     }
 
     /**
@@ -88,12 +89,15 @@ class Jmysql
      * @param string $table            
      * @param array|string $conditions            
      * @param array|string $field            
+     * @param array|string $order            
      */
-    public function fetchOne($table = '', $conditions = array(), $field = array())
+    public function fetchOne($table = '', $conditions = array(), $field = array(), $order = '')
     {
         $where = $this->where($conditions);
         $field = $this->field($field);
-        $sql = "SELECT " . $field . " FROM `$table` WHERE " . $where;
+        $order = $this->order($order);
+        $sql = "SELECT " . $field . " FROM `$table` WHERE " . $where . $order;
+        $this->sql = $sql;
         $result = $this->db->query($sql);
         if (! $result) {
             return array();
@@ -108,12 +112,14 @@ class Jmysql
      * @param string $table            
      * @param array|string $conditions            
      * @param array|string $field            
+     * @param array|string $order            
      */
-    public function fetchAll($table = '', $conditions = array(), $field = array())
+    public function fetchAll($table = '', $conditions = array(), $field = array(), $order = '')
     {
         $where = $this->where($conditions);
         $field = $this->field($field);
-        $sql = "SELECT " . $field . " FROM `$table` WHERE " . $where;
+        $order = $this->order($order);
+        $sql = "SELECT " . $field . " FROM `$table` WHERE " . $where . $order;
         return $this->query($sql);
     }
 
@@ -173,6 +179,7 @@ class Jmysql
      */
     public function query($sql)
     {
+        $this->sql = $sql;
         $result = $this->db->query($sql);
         if (! $result) {
             return array();
@@ -188,6 +195,7 @@ class Jmysql
      */
     public function execute($sql)
     {
+        $this->sql = $sql;
         return $this->db->exec($sql);
     }
 
@@ -284,6 +292,37 @@ class Jmysql
             $where = $conditions;
         }
         return $where;
+    }
+
+    /**
+     * 构造order
+     *
+     * @param array|string $order            
+     * @return string
+     */
+    private function order($conditions)
+    {
+        $order = ' ORDER BY ';
+        if (empty($conditions)) {
+            $order = '';
+        } elseif (is_string($conditions)) {
+            $order .= $conditions;
+        } else {
+            $order = '';
+        }
+        return $order;
+    }
+
+    /**
+     * 调试模式
+     */
+    private function debug()
+    {
+        if ($this->debug) {
+            echo '<pre>';
+            echo $this->sql;
+            echo '<pre>';
+        }
     }
 }
 
