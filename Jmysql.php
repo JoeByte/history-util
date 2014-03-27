@@ -95,6 +95,9 @@ class Jmysql
         $field = $this->field($field);
         $sql = "SELECT " . $field . " FROM `$table` WHERE " . $where;
         $result = $this->db->query($sql);
+        if (! $result) {
+            return array();
+        }
         $result->setFetchMode(PDO::FETCH_ASSOC);
         return $result->fetch();
     }
@@ -171,6 +174,9 @@ class Jmysql
     public function query($sql)
     {
         $result = $this->db->query($sql);
+        if (! $result) {
+            return array();
+        }
         $result->setFetchMode(PDO::FETCH_ASSOC);
         return $result->fetchAll();
     }
