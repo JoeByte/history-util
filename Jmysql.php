@@ -3,11 +3,12 @@
 /**
  * Jmysql Operation Class
  * Jmysql IS USED TO OPERAT MYSQL
- * 需要PHP的PDO拓展支持
+ * Jmysql.php是一个mysql数据库操作类，需要PHP的PDO拓展支持
  *
- * @package     xxtime/Jmysql.class
+ * @package     xxtime/Jmysql.php
  * @author      joe@xxtime.com
  * @link        https://github.com/thendfeel/xxtime
+ * @link        http://git.oschina.net/thendfeel/xxtime
  * @example     http://dev.xxtime.com
  * @copyright   xxtime.com
  * @created     2014-02-26
@@ -88,10 +89,10 @@ class Jmysql
      *
      * @param string $table            
      * @param array|string $conditions            
-     * @param array|string $field            
      * @param array|string $order            
+     * @param array|string $field            
      */
-    public function fetchOne($table = '', $conditions = array(), $field = array(), $order = '')
+    public function fetchOne($table = '', $conditions = array(), $order = '', $field = array())
     {
         $where = $this->where($conditions);
         $field = $this->field($field);
@@ -111,10 +112,10 @@ class Jmysql
      *
      * @param string $table            
      * @param array|string $conditions            
-     * @param array|string $field            
      * @param array|string $order            
+     * @param array|string $field            
      */
-    public function fetchAll($table = '', $conditions = array(), $field = array(), $order = '')
+    public function fetchAll($table = '', $conditions = array(), $order = '', $field = array())
     {
         $where = $this->where($conditions);
         $field = $this->field($field);
