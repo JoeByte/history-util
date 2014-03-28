@@ -85,6 +85,26 @@ class Jmysql
     }
 
     /**
+     * 分页获取
+     *
+     * @param string $table            
+     * @param array|string $conditions            
+     * @param intval $page            
+     * @param intval $size            
+     * @param array|string $order            
+     * @param array|string $field            
+     */
+    public function fetch($table = '', $conditions = array(), $page = 1, $size = 20, $order = '', $field = array())
+    {
+        $where = $this->where($conditions);
+        $order = $this->order($order);
+        $field = $this->field($field);
+        $skin = ($page - 1) * $size;
+        $sql = "SELECT " . $field . " FROM `$table` WHERE " . $where . $order . " LIMIT $skin , $size";
+        return $this->query($sql);
+    }
+
+    /**
      * 执行SQL查询语句 返回一条数据
      *
      * @param string $table            
