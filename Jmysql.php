@@ -17,10 +17,11 @@
 // $config = array( 'host' => '127.0.0.1', 'port' => '3306', 'dbname' => 'db_test', 'user' => 'root', 'password' => '123456' );
 // $db = new Jmysql($config);
 // USE EXAMPLE NO.1 # FIND
-// $ret1 = $db->fetchAll('user', array('id' => 1), 'id, name');
+// $ret0 = $db->fetch('user', 'id > 2', 1, 20);
+// $ret1 = $db->fetchAll('user', array('id' => 1), 'id ASC', 'id, name');
 // $ret2 = $db->fetchAll('user', array('name' => 'Joe'));
-// $ret3 = $db->fetchOne('user', array('id' => 1), array('id', 'name'));
-// $ret4 = $db->fetchOne('user', 'id = 1', array('id', 'name'));
+// $ret3 = $db->fetchOne('user', array('id' => 1), 'id DESC', array('id', 'name'));
+// $ret4 = $db->fetchOne('user', 'id = 1', 'id DESC', array('id', 'name'));
 
 // USE EXAMPLE NO.2 # INSERT
 // $ret5 = $db->insert('user', array('name' => 'xxtime', 'age' => 26));
