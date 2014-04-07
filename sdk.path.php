@@ -7,6 +7,7 @@
  * @package     xxtime/sdk.path.php
  * @author      joe@xxtime.com
  * @link        https://github.com/thendfeel/xxtime
+ * @link        https://path.com/developers/docs
  * @example     http://dev.xxtime.com
  * @copyright   xxtime.com
  * @created     2014-04-07
