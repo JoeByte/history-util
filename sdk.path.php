@@ -66,9 +66,7 @@ class Sdk_path
                 'code' => $_GET['code']
             );
             $url = $this->host . "/oauth2/access_token";
-            $response = $this->http($url, 'POST', $query_data);
-            print_r($response);
-            // TODO :: save access_token
+            return $this->http($url, 'POST', $query_data);
         }
     }
 
