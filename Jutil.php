@@ -56,7 +56,7 @@ function dbx()
     }
     ;
     echo '</pre>';
-    exit('---------- Debug End----------');
+    exit('---------- Debug End ----------');
 }
 
 /**
@@ -75,7 +75,7 @@ function dbv()
     }
     ;
     echo '</pre>';
-    exit('---------- Debug End----------');
+    exit('---------- Debug End ----------');
 }
 
 
