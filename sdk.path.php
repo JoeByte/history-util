@@ -146,7 +146,7 @@ class Sdk_path
         }
         
         if (isset($this->access_token) && $this->access_token) {
-            $headers[] = "Authorization: Bearer $this->access_token";
+            $headers = "Authorization: Bearer $this->access_token";
         }
         
         curl_setopt($ci, CURLOPT_URL, $url);
