@@ -4,7 +4,8 @@
  * Jcurl Operation Class
  * Jcurl IS USED TO REQUEST URL OR POST DATAS
  *
- * @package     xxtime/Jcurl
+ * @package     xxtime/Jcurl.php
+ * @version     2.0
  * @author      joe@xxtime.com
  * @link        https://github.com/thendfeel/xxtime
  * @example     http://dev.xxtime.com
@@ -12,129 +13,155 @@
  * @created     2014-01-16
  */
 
-// Use Exp
-// Jcurl::$cookie = 'uid=229165395; _is_admin=1;';
-// $output = Jcurl::get('http://www.xxtime.com/229165395');
-// Jcurl::writeFile($output);
+// Use Exp No.1
+// $jcurl = new Jcurl();
+// $jcurl->cookie = 'anonymid=hqhua3nr-jbl05x; _r01_=1';
+// $output = $jcurl->get('http://blog.xxtime.com');
+// print_r($output);
+
 // Use Exp No.2
-// Jcurl::$cookie_file = 'cookie';
-// $postData = array("username" => "user", "password" => "pass");
-// $output = Jcurl::post('http://www.xxtime.com', $postData);
-// Jcurl::writeFile($output);
+// $jcurl = new Jcurl();
+// $jcurl->debug = TRUE;
+// $output = $jcurl->post('http://www.xxtime.com/test.php', array('name' => 'Joe', 'site' => 'www.xxtime.com'));
 class Jcurl
 {
 
-    public static $url = '';
+    public $url = '';
 
-    public static $cookie = '';
+    public $cookie = '';
 
-    public static $cookie_file = '';
+    public $cookie_file = '';
 
-    public static $postData = array();
+    public $postdata = array();
 
-    private static $curl;
+    public $timeout = 30;
 
-    private static $output;
+    public $connecttimeout = 30;
 
-    /**
-     * Init The Curl
-     *
-     * @return resource
-     */
-    private static function init()
-    {
-        if (self::$curl) {
-            return self::$curl;
-        }
-        self::$curl = curl_init();
-        $option = array(
-            CURLOPT_URL => self::$url,
-            CURLOPT_HEADER => FALSE,
-            CURLOPT_RETURNTRANSFER => TRUE,
-            CURLOPT_AUTOREFERER => TRUE,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 6.1; WOW64) Apple WebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36',
-            CURLOPT_COOKIE => self::$cookie,
-            CURLOPT_COOKIEFILE => self::$cookie_file,
-            CURLOPT_SSL_VERIFYPEER => FALSE,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_FOLLOWLOCATION => TRUE,
-            CURLOPT_MAXREDIRS => 10
-        );
-        curl_setopt_array(self::$curl, $option);
-        if (self::$cookie_file && ! file_exists(self::$cookie_file)) {
-            curl_setopt(self::$curl, CURLOPT_COOKIEJAR, self::$cookie_file);
-        }
-        return self::$curl;
-    }
+    public $ssl_verifypeer = FALSE;
+
+    public $ssl_verifyhost = 0;
+
+    public $header = FALSE;
+
+    public $encoding = '';
+
+    public $useragent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) Apple WebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36';
+
+    public $format = 'json';
+
+    public $decode_json = FALSE;
+
+    public $http_code;
+
+    public $http_info;
+
+    public $debug = FALSE;
 
     /**
-     * Exec Curl And Return The Result
-     *
-     * @return mixed
-     */
-    private static function go()
-    {
-        self::$output = curl_exec(self::$curl);
-        if (self::$output === FALSE) {
-            echo 'cURL Error: ' . curl_error(self::$curl);
-        } else {
-            // $info = curl_getinfo(self::$curl);
-        }
-        curl_close(self::$curl);
-        self::$curl = '';
-        return self::$output;
-    }
-
-    /**
-     * Write The Contents To A File
-     *
-     * @param string $text            
-     * @param string $fileName            
-     */
-    public static function writeFile($text = '', $fileName = 'Jcurl.html')
-    {
-        $fileName = dirname(__FILE__) . '/' . $fileName;
-        $handle = fopen($fileName, "a+b");
-        $text .= "\r\n";
-        fwrite($handle, $text);
-        fclose($handle);
-    }
-
-    /**
-     * Get The Content With A URL
+     * GET请求
      *
      * @param string $url            
      */
-    public static function get($url = NULL)
+    public function get($url = NULL)
     {
-        if (! empty($url)) {
-            self::$url = $url;
-        }
-        self::init();
-        return self::go();
+        return $this->http($url, 'GET');
     }
 
     /**
-     * Post Data To URL
+     * Post请求
      *
      * @param string $url            
      * @param array $data            
      */
-    public static function post($url = NULL, $data = array())
+    public function post($url = NULL, $data = array())
     {
         if (! empty($url)) {
-            self::$url = $url;
+            $this->url = $url;
         }
         if (! empty($data)) {
-            self::$postData = $data;
+            $this->post_data = $data;
         }
-        self::init();
-        curl_setopt(self::$curl, CURLOPT_POST, TRUE);
-        curl_setopt(self::$curl, CURLOPT_POSTFIELDS, self::$postData);
-        return self::go();
+        return $this->http($url, 'POST', $data);
+    }
+
+    private function http($url, $method, $postfields = NULL, $headers = array())
+    {
+        $this->http_info = array();
+        $ci = curl_init();
+        curl_setopt($ci, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        curl_setopt($ci, CURLOPT_USERAGENT, $this->useragent);
+        curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
+        curl_setopt($ci, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($ci, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ci, CURLOPT_ENCODING, "");
+        curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
+        curl_setopt($ci, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ci, CURLOPT_HEADER, FALSE);
+        // curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader')); //回调
+        
+        switch ($method) {
+            case 'POST':
+                curl_setopt($ci, CURLOPT_POST, TRUE);
+                if (! empty($postfields)) {
+                    curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
+                    $this->postdata = $postfields;
+                }
+                break;
+            case 'GET':
+                if (! empty($postfields)) {
+                    $url = "{$url}?" . http_build_query($postfields);
+                }
+                break;
+            case 'DELETE':
+                curl_setopt($ci, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                if (! empty($postfields)) {
+                    $url = "{$url}?{$postfields}";
+                }
+        }
+        
+        if ($this->cookie) {
+            curl_setopt($ci, CURLOPT_COOKIE, $this->cookie);
+        }
+        if ($this->cookie_file) {
+            curl_setopt($ci, CURLOPT_COOKIEFILE, $this->cookie_file);
+            if (! file_exists($this->cookie_file)) {
+                curl_setopt($ci, CURLOPT_COOKIEJAR, $this->cookie_file);
+            }
+        }
+        
+        if ($this->header) {
+            // 此处按需求自行改写
+            $headers[] = $this->header;
+        }
+        
+        curl_setopt($ci, CURLOPT_URL, $url);
+        curl_setopt($ci, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ci, CURLINFO_HEADER_OUT, TRUE);
+        
+        $response = curl_exec($ci);
+        $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
+        $this->http_info = array_merge($this->http_info, curl_getinfo($ci));
+        $this->url = $url;
+        if ($this->debug) {
+            echo "<pre>---------- Post Data ----------\r\n";
+            var_dump($postfields);
+            
+            echo "---------- Headers ----------\r\n";
+            print_r($headers);
+            
+            echo '---------- Request Info ----------' . "\r\n";
+            print_r(curl_getinfo($ci));
+            
+            echo '---------- Response ----------' . "\r\n";
+            print_r($response);
+        }
+        curl_close($ci);
+        if ($this->decode_json) {
+            $response = json_decode($response, TRUE);
+        }
+        return $response;
     }
 }
-
 
 /* End of file Jcurl.php */
