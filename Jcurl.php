@@ -132,7 +132,7 @@ class Jcurl
         
         if ($this->header) {
             // 此处按需求自行改写
-            $headers[] = $this->header;
+            $headers = $this->header;
         }
         
         curl_setopt($ci, CURLOPT_URL, $url);
