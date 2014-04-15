@@ -78,5 +78,23 @@ function dbv()
     exit('---------- Debug End ----------');
 }
 
+/**
+ * print_r For Html Page Debug Output
+ * 调试函数
+ */
+function dbc()
+{
+    echo '<pre>';
+    if (func_num_args()) {
+        foreach (func_get_args() as $k => $v) {
+            echo "------- dbx $k -------<br/>";
+            print_r($v);
+            echo "<br/>";
+        }
+    }
+    ;
+    echo '</pre>';
+}
+
 
 /* End of file Jutil.php */
