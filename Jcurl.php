@@ -40,7 +40,7 @@ class Jcurl
 
     public $ssl_verifypeer = FALSE;
 
-    public $ssl_verifyhost = 0;
+    public $ssl_verifyhost = 2;
 
     public $header = FALSE;
 
@@ -96,7 +96,7 @@ class Jcurl
         curl_setopt($ci, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ci, CURLOPT_ENCODING, "");
         curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
-        curl_setopt($ci, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ci, CURLOPT_SSL_VERIFYHOST, $this->ssl_verifyhost);
         curl_setopt($ci, CURLOPT_HEADER, FALSE);
         // curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader')); //回调
         
