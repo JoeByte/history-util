@@ -16,7 +16,7 @@
  */
 include '../phpQuery.php';
 include '../Jutil.php';
-include '../Jcurl.php';
+include '../Jcurl.class.php';
 
 $jcurl = new Jcurl();
 $jcurl->cookie = 'anonymid=hqhua3nr-jbl05x; _r01_=1; depovince=GW; JSESSIONID=abcLxMmIirzkU-KXgPovu; jebe_key=33c9afc4-38cd-494e-bd85-8287e2a80f89%7Ccfcd208495d565ef66e7dff9f98764da%7C1397183774814%7C0%7C1397183736794; jebecookies=46dd6b07-dffb-41fa-a999-95a487c1a7d6|||||; ick_login=d9216c76-18db-4bda-ab78-5ae406ac0f6c; _de=52D969BB6AA78EF7CDC3323DFA47FB42; p=1248f9b4ccd20020a9b995b3dfe055f25; first_login_flag=1; t=06fdc7e984837ec380c5c007d1d8550c5; societyguester=06fdc7e984837ec380c5c007d1d8550c5; id=229165395; xnsid=b077ba43; loginfrom=syshome';
