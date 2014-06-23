@@ -125,6 +125,7 @@ function signCreate($array, $key = '')
  */
 function logWrite($text = '', $fileName = 'log.txt')
 {
+    $text = var_export($text, TRUE);
     $fileName = dirname(__FILE__) . '/' . $fileName;
     $handle = fopen($fileName, "a+b");
     $text .= "\r\n";
