@@ -11,7 +11,7 @@
  * @link        http://git.oschina.net/thendfeel/xxtime
  * @example     http://dev.xxtime.com
  * @copyright   xxtime.com
- * @created     2014-02-26
+ * @since       2014-02-26
  */
 
 // $config = array( 'host' => '127.0.0.1', 'port' => '3306', 'dbname' => 'db_test', 'user' => 'root', 'password' => '123456' );
