@@ -145,12 +145,28 @@ function write_log($text = '', $fileName = 'log.txt')
 }
 
 /**
+ * 成功返回
+ *
+ * @param string $msg            
+ * @param string $code            
+ */
+function success($msg, $code = '200')
+{
+    $error = array(
+        'error' => 0,
+        'code' => $code,
+        'msg' => $msg
+    );
+    exit(json_encode($error));
+}
+
+/**
  * 错误输出
  *
  * @param string $msg            
  * @param string $code            
  */
-function error_out($msg, $code = '404.1')
+function failure($msg, $code = '404.1')
 {
     $error = array(
         'error' => 1,
