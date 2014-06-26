@@ -26,7 +26,6 @@ function dbx()
             echo "<br/>";
         }
     }
-    ;
     echo '</pre>';
     exit('---------- Debug End ----------');
 }
@@ -45,7 +44,6 @@ function dbv()
             echo "<br/>";
         }
     }
-    ;
     echo '</pre>';
     exit('---------- Debug End ----------');
 }
@@ -64,7 +62,6 @@ function dbc()
             echo "<br/>";
         }
     }
-    ;
     echo '</pre>';
 }
 
@@ -83,7 +80,14 @@ function random($length = 8)
     return $string;
 }
 
-function getParam($param = '', $default = '')
+/**
+ * 获取参数
+ *
+ * @param string $param            
+ * @param string $default            
+ * @return Ambigous <mixed, string>|Ambigous <multitype:, mixed>
+ */
+function param($param = '', $default = '')
 {
     $search = array(
         '\\',
@@ -109,7 +113,14 @@ function getParam($param = '', $default = '')
     return $param;
 }
 
-function signCreate($array, $key = '')
+/**
+ * 创建签名
+ *
+ * @param array $array            
+ * @param string $key            
+ * @return string
+ */
+function create_sign($array, $key = '')
 {
     ksort($array);
     $string = '';
@@ -123,7 +134,7 @@ function signCreate($array, $key = '')
  * 写日志文件
  * Write File
  */
-function logWrite($text = '', $fileName = 'log.txt')
+function write_log($text = '', $fileName = 'log.txt')
 {
     $text = var_export($text, TRUE);
     $fileName = dirname(__FILE__) . '/' . $fileName;
@@ -133,7 +144,13 @@ function logWrite($text = '', $fileName = 'log.txt')
     fclose($handle);
 }
 
-function errorOut($msg, $code = '404.1')
+/**
+ * 错误输出
+ *
+ * @param string $msg            
+ * @param string $code            
+ */
+function error_out($msg, $code = '404.1')
 {
     $error = array(
         'error' => 1,
