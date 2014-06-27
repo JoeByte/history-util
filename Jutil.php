@@ -120,25 +120,29 @@ function param($param = '', $default = '')
  * @param string $key            
  * @return string
  */
-function create_sign($array, $key = '')
+function create_sign($array, $signkey = '')
 {
     ksort($array);
     $string = '';
     foreach ($array as $key => $value) {
         $string .= "$key=$value&";
     }
-    return md5(rtrim($string, "&") . $key);
+    return md5(rtrim($string, "&") . $signkey);
 }
 
 /**
  * 写日志文件
  * Write File
  */
-function write_log($text = '', $fileName = 'log.txt')
+function write_log($text = '', $fileName = 'log.txt', $append = TRUE)
 {
     $text = var_export($text, TRUE);
     $fileName = dirname(__FILE__) . '/' . $fileName;
-    $handle = fopen($fileName, "a+b");
+    if ($append) {
+        $handle = fopen($fileName, "a+b");
+    } else {
+        $handle = fopen($fileName, "w+b");
+    }
     $text .= "\r\n";
     fwrite($handle, $text);
     fclose($handle);
