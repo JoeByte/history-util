@@ -17,11 +17,11 @@
 // $config = array( 'host' => '127.0.0.1', 'port' => '3306', 'dbname' => 'db_test', 'user' => 'root', 'password' => '123456' );
 // $db = new Jmysql($config);
 // USE EXAMPLE NO.1 # FIND
-// $ret0 = $db->fetch('user', 'id > 2', 1, 20);
-// $ret1 = $db->fetchAll('user', array('id' => 1), 'id ASC', 'id, name');
-// $ret2 = $db->fetchAll('user', array('name' => 'Joe'));
-// $ret3 = $db->fetchOne('user', array('id' => 1), 'id DESC', array('id', 'name'));
-// $ret4 = $db->fetchOne('user', 'id = 1', 'id DESC', array('id', 'name'));
+// $ret0 = $db->find('user', 'id > 2', 1, 20);
+// $ret1 = $db->findAll('user', array('id' => 1), 'id ASC', 'id, name');
+// $ret2 = $db->findAll('user', array('name' => 'Joe'));
+// $ret3 = $db->findOne('user', array('id' => 1), 'id DESC', array('id', 'name'));
+// $ret4 = $db->findOne('user', 'id = 1', 'id DESC', array('id', 'name'));
 
 // USE EXAMPLE NO.2 # INSERT
 // $ret5 = $db->insert('user', array('name' => 'xxtime', 'age' => 26));
@@ -95,7 +95,7 @@ class Jmysql
      * @param array|string $order            
      * @param array|string $field            
      */
-    public function fetch($table = '', $conditions = array(), $page = 1, $size = 20, $order = '', $field = array())
+    public function find($table = '', $conditions = array(), $page = 1, $size = 20, $order = '', $field = array())
     {
         $where = $this->where($conditions);
         $order = $this->order($order);
@@ -113,7 +113,7 @@ class Jmysql
      * @param array|string $order            
      * @param array|string $field            
      */
-    public function fetchOne($table = '', $conditions = array(), $order = '', $field = array())
+    public function findOne($table = '', $conditions = array(), $order = '', $field = array())
     {
         $where = $this->where($conditions);
         $field = $this->field($field);
@@ -125,7 +125,7 @@ class Jmysql
             return array();
         }
         $result->setFetchMode(PDO::FETCH_ASSOC);
-        return $result->fetch();
+        return $result->find();
     }
 
     /**
@@ -136,7 +136,7 @@ class Jmysql
      * @param array|string $order            
      * @param array|string $field            
      */
-    public function fetchAll($table = '', $conditions = array(), $order = '', $field = array())
+    public function findAll($table = '', $conditions = array(), $order = '', $field = array())
     {
         $where = $this->where($conditions);
         $field = $this->field($field);
@@ -145,7 +145,7 @@ class Jmysql
         return $this->query($sql);
     }
 
-    public function insert($table, $input = array())
+    public function add($table, $input = array())
     {
         $field = '';
         $value = '';
@@ -207,7 +207,7 @@ class Jmysql
             return array();
         }
         $result->setFetchMode(PDO::FETCH_ASSOC);
-        return $result->fetchAll();
+        return $result->findAll();
     }
 
     /**

@@ -55,13 +55,13 @@ class Joracle
         $this->db = oci_connect($this->username, $this->password, $constr);
     }
 
-    public function fetch($table = '', $conditions = array(), $page = 1, $size = 20, $order = '', $field = array())
+    public function find($table = '', $conditions = array(), $page = 1, $size = 20, $order = '', $field = array())
     {}
 
-    public function fetchOne($table = '', $conditions = array(), $order = '', $field = array())
+    public function findOne($table = '', $conditions = array(), $order = '', $field = array())
     {}
 
-    public function fetchAll($table = '', $conditions = array(), $order = '', $field = array())
+    public function findAll($table = '', $conditions = array(), $order = '', $field = array())
     {
         $where = $this->where($conditions);
         $field = $this->field($field);
@@ -80,7 +80,7 @@ class Joracle
      * @param array $type=array('key'=>'date');            
      * @return boolean
      */
-    public function insert($table, $input = array(), $type)
+    public function add($table, $input = array(), $type)
     {
         $field = '';
         $value = '';
