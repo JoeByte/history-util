@@ -134,7 +134,7 @@ function create_sign($array, $signkey = '')
  * 写日志文件
  * Write File
  */
-function write_log($text = '', $fileName = 'log.txt', $append = TRUE)
+function write_file($text = '', $fileName = 'log.txt', $append = TRUE)
 {
     $text = var_export($text, TRUE);
     $fileName = dirname(__FILE__) . '/' . $fileName;
