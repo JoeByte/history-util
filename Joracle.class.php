@@ -26,6 +26,8 @@ class Joracle
 
     public $password = '';
 
+    public $charset = 'utf8';
+
     public $pk = 'id';
 
     public $debug = FALSE;
@@ -52,7 +54,7 @@ class Joracle
     public function init()
     {
         $constr = $this->host . ':' . $this->port . '/' . $this->dbname;
-        $this->db = oci_connect($this->username, $this->password, $constr);
+        $this->db = oci_connect($this->username, $this->password, $constr, $this->charset);
     }
 
     public function find($table = '', $conditions = array(), $page = 1, $size = 20, $order = '', $field = array())
