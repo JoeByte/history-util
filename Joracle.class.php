@@ -67,7 +67,7 @@ class Joracle
         $field = $this->field($field);
         $order = $this->order($order);
         $sql = "SELECT " . $field . " FROM $table WHERE " . $where . $order;
-        $this->query($sql);
+        $this->executeStatements($sql);
         $result = array();
         $rows = oci_fetch_all($this->stmt, $result, 0, - 1, OCI_FETCHSTATEMENT_BY_ROW);
         return $result;
@@ -103,6 +103,40 @@ class Joracle
         return $this->execute($sql);
     }
 
+    /**
+     *
+     * @param string $table            
+     * @param array $input            
+     * @param array $type=array('key'=>'date');            
+     * @return boolean
+     */
+    public function addAll($table, $input = array(), $type)
+    {
+        $field = '';
+        $value = '';
+        if (! is_array($input)) {
+            return FALSE;
+        }
+        foreach ($input as $key => $value) {
+            foreach ($value as $k => $v) {
+                if (isset($type[$k])) {
+                    if ($type[$k] == 'date') {
+                        $value .= "to_date('$v','yyyy-mm-dd hh24:mi:ss'),";
+                    }
+                } else {
+                    $value .= "'$v',";
+                }
+            }
+        }
+        $field = array_keys(array_pop($input));
+        print_r($field);
+        exit();
+        $field = trim($field, ',');
+        $value = trim($value, ',');
+        $sql = "INSERT INTO $table ($field) VALUES ($value)";
+        return $this->execute($sql);
+    }
+
     public function update($table, $conditions, $data)
     {}
 
@@ -111,15 +145,23 @@ class Joracle
 
     public function query($sql)
     {
-        $this->sql = $sql;
-        $this->stmt = oci_parse($this->db, $sql);
-        return oci_execute($this->stmt);
+        $result = array();
+        $this->executeStatements($sql);
+        $rows = oci_fetch_all($this->stmt, $result, 0, - 1, OCI_FETCHSTATEMENT_BY_ROW);
+        return $result;
     }
 
     public function execute($sql)
     {
-        $this->query($sql);
+        $this->executeStatements($sql);
         return oci_commit($this->db);
+    }
+
+    private function executeStatements($sql)
+    {
+        $this->sql = $sql;
+        $this->stmt = oci_parse($this->db, $sql);
+        return oci_execute($this->stmt);
     }
 
     /**
