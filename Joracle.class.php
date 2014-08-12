@@ -54,7 +54,20 @@ class Joracle
     public function init()
     {
         $constr = $this->host . ':' . $this->port . '/' . $this->dbname;
-        $this->db = oci_connect($this->username, $this->password, $constr, $this->charset);
+        try {
+            $this->db = @oci_connect($this->username, $this->password, $constr, $this->charset);
+            if (! $this->db) {
+                $e = oci_error();
+                $output = array(
+                    'error' => 1,
+                    'msg' => $e['message']
+                );
+                die(json_encode($output));
+                throw new Exception($e['message']);
+            }
+        } catch (Exception $e) {
+            exit();
+        }
     }
 
     public function find($table = '', $conditions = array(), $page = 1, $size = 20, $order = '', $field = array())
