@@ -150,6 +150,9 @@ class Joracle
         $result = array();
         $this->executeStatements($sql);
         $rows = oci_fetch_all($this->stmt, $result, 0, - 1, OCI_FETCHSTATEMENT_BY_ROW);
+        if (count($result) == 1) {
+            return $result[0];
+        }
         return $result;
     }
 
