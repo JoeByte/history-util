@@ -31,6 +31,17 @@ class Joracle
     public $pk = 'id';
 
     public $debug = FALSE;
+    
+    // 回调函数
+    public $callback = '';
+    
+    // 回调函数参数
+    public $callback_param = '';
+
+    public $data = '';
+    
+    // 输出信息array json
+    private $output = array();
 
     private $db;
 
@@ -58,11 +69,13 @@ class Joracle
             $this->db = @oci_connect($this->username, $this->password, $constr, $this->charset);
             if (! $this->db) {
                 $e = oci_error();
-                $output = array(
+                $this->output = array(
                     'error' => 1,
                     'msg' => $e['message']
                 );
-                die(json_encode($output));
+                $this->callback_param = $this->output['msg'];
+                $this->callback();
+                die($this->output['msg']);
                 throw new Exception($e['message']);
             }
         } catch (Exception $e) {
@@ -261,6 +274,30 @@ class Joracle
             $order = '';
         }
         return $order;
+    }
+
+    /**
+     * 回调函数
+     */
+    private function callback($param = NULL)
+    {
+        if ($param) {
+            $this->callback_param = $param;
+        }
+        if (! $this->callback) {
+            return FALSE;
+        }
+        $call = preg_split('/[\:]+|\-\>/i', $this->callback);
+        if (count($call) == 1) {
+            $this->data = call_user_func($call['0'], $this->callback_param);
+        } else {
+            $this->data = call_user_func_array(array(
+                $call['0'],
+                $call['1']
+            ), array(
+                $this->callback_param
+            ));
+        }
     }
 
     /**
