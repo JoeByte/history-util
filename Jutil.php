@@ -133,15 +133,25 @@ function create_sign($array, $signkey = '')
 /**
  * 写日志文件
  * Write File
+ *
+ * @param string $text            
+ * @param string $file            
+ * @param string $append            
+ * @return boolean
  */
-function write_file($text = '', $fileName = 'log.txt', $append = TRUE)
+function write_file($text = '', $file = 'log.txt', $append = TRUE)
 {
     $text = var_export($text, TRUE);
-    $fileName = dirname(__FILE__) . '/' . $fileName;
+    if (strpos($file, '/') === FALSE) {
+        $file = dirname(__FILE__) . '/' . $file;
+    }
+    if (strpos($file, '/') !== 0) {
+        return FALSE;
+    }
     if ($append) {
-        $handle = fopen($fileName, "a+b");
+        $handle = fopen($file, "a+b");
     } else {
-        $handle = fopen($fileName, "w+b");
+        $handle = fopen($file, "w+b");
     }
     $text .= "\r\n";
     fwrite($handle, $text);
@@ -170,7 +180,7 @@ function success($msg, $code = '200')
  * @param string $msg            
  * @param string $code            
  */
-function failure($msg, $code = '404.1')
+function failure($msg, $code = '202.1')
 {
     $error = array(
         'error' => 1,
