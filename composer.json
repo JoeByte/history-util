@@ -1,0 +1,13 @@
+{
+	"name": "xxtime/xxtime",
+	"description": "The XXTIME TOOLS",
+	"keywords": ["xxtime", "oracle", "mysql"],
+	"license": "MIT",
+	"require": {
+		"php": ">=5.3.0",
+	},
+	"autoload": {
+		"classmap": [
+		]
+	}
+}
