@@ -5,22 +5,35 @@
  * Joracle IS USED TO OPERAT ORACLE DATABASE
  * Joracle.class.php是一个oracle数据库操作类，需要PHP的oci拓展支持
  *
- * @package     xxtime/Jmysql.php
+ * @package     xxtime/Joracle.class.php
  * @author      joe@xxtime.com
  * @link        https://github.com/thendfeel/xxtime
  * @link        http://git.oschina.net/thendfeel/xxtime
  * @example     http://dev.xxtime.com
  * @copyright   xxtime.com
  * @since       2014-06-18
+ * @update      2014-11-13
  */
+
+//$config = array(
+//    'host' => '127.0.0.1',
+//    'port' => 1521,
+//    'database' => 'db',
+//    'username' => 'user',
+//    'password' => '123456',
+//);
+//$db = new Joracle($config);
+//$db->findByPk('user', 1);
+
+
 class Joracle
 {
 
-    public $host = 'localhost';
+    public $host = '127.0.0.1';
 
     public $port = 1521;
 
-    public $dbname = '';
+    public $database = '';
 
     public $username = '';
 
@@ -30,16 +43,12 @@ class Joracle
 
     public $pk = 'id';
 
-    public $debug = FALSE;
-    
-    // 回调函数
+    public $debug = TRUE;
+
     public $callback = '';
-    
-    // 回调函数参数
-    public $callback_param = '';
 
     public $data = '';
-    
+
     // 输出信息array json
     private $output = array();
 
@@ -64,17 +73,15 @@ class Joracle
 
     public function init()
     {
-        $constr = $this->host . ':' . $this->port . '/' . $this->dbname;
+        $constring = $this->host . ':' . $this->port . '/' . $this->database;
         try {
-            $this->db = @oci_connect($this->username, $this->password, $constr, $this->charset);
-            if (! $this->db) {
+            $this->db = @oci_connect($this->username, $this->password, $constring, $this->charset);
+            if (!$this->db) {
                 $e = oci_error();
                 $this->output = array(
                     'error' => 1,
                     'msg' => $e['message']
                 );
-                $this->callback_param = $this->output['msg'];
-                $this->callback();
                 die($this->output['msg']);
                 throw new Exception($e['message']);
             }
@@ -83,39 +90,77 @@ class Joracle
         }
     }
 
-    public function find($table = '', $conditions = array(), $page = 1, $size = 20, $order = '', $field = array())
-    {}
+    // 查询 @根据主键查询
+    public function findByPk($table, $id = 0)
+    {
+        $sql = "SELECT * FROM $table WHERE $this->pk = '$id'";
+        return $this->query($sql);
+    }
 
-    public function findOne($table = '', $conditions = array(), $order = '', $field = array())
-    {}
+    // 查询一条记录
+    public function findOne($table, $conditions = array(), $field = array())
+    {
+        $where = $this->where($conditions) . ' AND ROWNUM = 1';
+        $field = $this->field($field);
+        $sql = "SELECT " . $field . " FROM $table WHERE " . $where;
+        return $this->query($sql);
+    }
 
-    public function findAll($table = '', $conditions = array(), $order = '', $field = array())
+    // 查询全部
+    public function findAll($table, $conditions = array(), $order = '', $field = array())
     {
         $where = $this->where($conditions);
         $field = $this->field($field);
         $order = $this->order($order);
         $sql = "SELECT " . $field . " FROM $table WHERE " . $where . $order;
-        $this->executeStatements($sql);
+        return $this->query($sql);
+    }
+
+    // 分页查询
+    public function find($table, $conditions = array(), $page = 1, $size = 20, $order = '', $field = array())
+    {
+        $offset = ($page - 1) * $size;
+        $skip = $page * $size;
+        $where = $this->where($conditions) . " AND ROWNUM >= $offset AND ROWNUM <= $skip";
+        $field = $this->field($field);
+        $order = $this->order($order);
+        $sql = "SELECT " . $field . " FROM $table WHERE " . $where . $order;
+        return $this->query($sql);
+    }
+
+    // 字典
+    public function lists($table, $field1 = '', $field2 = '')
+    {
+        if (!$field2) {
+            $sql = "SELECT $field1 FROM $table";
+        } else {
+            $sql = "SELECT $field1, $field2 FROM $table";
+        }
+        $ret = $this->query($sql);
         $result = array();
-        $rows = oci_fetch_all($this->stmt, $result, 0, - 1, OCI_FETCHSTATEMENT_BY_ROW);
+        if ($ret) {
+            if (!$field2) {
+                foreach ($ret as $value) {
+                    $result[] = $value[$field1];
+                }
+            } else {
+                foreach ($ret as $value) {
+                    $result[$value[$field1]] = $value[$field2];
+                }
+            }
+        }
         return $result;
     }
 
-    /**
-     *
-     * @param string $table            
-     * @param array $input            
-     * @param array $type=array('key'=>'date');            
-     * @return boolean
-     */
-    public function add($table, $input = array(), $type)
+    // 添加记录
+    public function add($table, $data = array(), $type)
     {
         $field = '';
         $value = '';
-        if (! is_array($input)) {
+        if (!is_array($data)) {
             return FALSE;
         }
-        foreach ($input as $k => $v) {
+        foreach ($data as $k => $v) {
             $field .= "$k" . ',';
             if (isset($type[$k])) {
                 if ($type[$k] == 'date') {
@@ -131,57 +176,33 @@ class Joracle
         return $this->execute($sql);
     }
 
-    /**
-     *
-     * @param string $table            
-     * @param array $input            
-     * @param array $type=array('key'=>'date');            
-     * @return boolean
-     */
-    public function addAll($table, $input = array(), $type)
+    // 更新
+    public function update($table, $id = 0, $newData = array())
     {
-        $field = '';
-        $value = '';
-        if (! is_array($input)) {
-            return FALSE;
-        }
-        foreach ($input as $key => $value) {
-            foreach ($value as $k => $v) {
-                if (isset($type[$k])) {
-                    if ($type[$k] == 'date') {
-                        $value .= "to_date('$v','yyyy-mm-dd hh24:mi:ss'),";
-                    }
-                } else {
-                    $value .= "'$v',";
-                }
-            }
-        }
-        $field = array_keys(array_pop($input));
-        print_r($field);
-        exit();
-        $field = trim($field, ',');
-        $value = trim($value, ',');
-        $sql = "INSERT INTO $table ($field) VALUES ($value)";
+        $sql = "UPDATE $table SET " . $this->built($newData, ',') . " WHERE $this->pk = '$id'";
         return $this->execute($sql);
     }
 
-    public function update($table, $conditions, $data)
-    {}
+    // 删除记录
+    public function delete($table, $id = 0)
+    {
+        $sql = "DELETE FROM $table WHERE $this->pk = '$id'";
+        return $this->execute($sql);
+    }
 
-    public function delete($table, $conditions)
-    {}
-
+    // 查询SQL
     public function query($sql)
     {
         $result = array();
         $this->executeStatements($sql);
-        $rows = oci_fetch_all($this->stmt, $result, 0, - 1, OCI_FETCHSTATEMENT_BY_ROW);
+        $rows = oci_fetch_all($this->stmt, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
         if (count($result) == 1) {
             return $result[0];
         }
         return $result;
     }
 
+    // 执行SQL
     public function execute($sql)
     {
         $this->executeStatements($sql);
@@ -195,12 +216,13 @@ class Joracle
         return oci_execute($this->stmt);
     }
 
+
     /**
      * 构造SQL
      *
-     * @param array $conditions            
-     * @param string $split            
-     * @param string $pre            
+     * @param array $conditions
+     * @param string $split
+     * @param string $pre
      * @return string
      */
     private function built($conditions = array(), $split = 'AND', $pre = '')
@@ -221,7 +243,7 @@ class Joracle
     /**
      * 构造查询字段field
      *
-     * @param array|string $field            
+     * @param array|string $field
      * @return string
      */
     private function field($field)
@@ -240,15 +262,15 @@ class Joracle
     /**
      * 构造条件where
      *
-     * @param array|string $conditions            
+     * @param array|string $conditions
      * @return string
      */
     private function where($conditions)
     {
         if (empty($conditions)) {
-            $where = '1=1';
+            $where = '1 = 1';
         } elseif (is_int($conditions)) {
-            $where = "$this->pk='$conditions'";
+            $where = "$this->pk = '$conditions'";
         } elseif (is_array($conditions)) {
             $where = $this->built($conditions);
         } else {
@@ -260,7 +282,7 @@ class Joracle
     /**
      * 构造order
      *
-     * @param array|string $order            
+     * @param array|string $order
      * @return string
      */
     private function order($conditions)
@@ -284,7 +306,7 @@ class Joracle
         if ($param) {
             $this->callback_param = $param;
         }
-        if (! $this->callback) {
+        if (!$this->callback) {
             return FALSE;
         }
         $call = preg_split('/[\:]+|\-\>/i', $this->callback);
