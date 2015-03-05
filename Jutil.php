@@ -16,19 +16,17 @@
  * print_r For Html Page Debug Output
  * 调试函数
  */
-function dbx()
+
+function debug()
 {
-    echo '<pre>';
-    if (func_num_args()) {
-        foreach (func_get_args() as $k => $v) {
-            echo "------- dbx $k -------<br/>";
-            print_r($v);
-            echo "<br/>";
-        }
-    }
-    echo '</pre>';
-    exit('---------- Debug End ----------');
+    echo "<pre>\r\n";
+    array_map(function ($x) {
+        print_r($x);
+        echo "\r\n<br />\r\n";
+    }, func_get_args());
+    die;
 }
+
 
 /**
  * var_dump For Html Page Debug Output
@@ -73,7 +71,7 @@ function random($length = 8)
 {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $string = '';
-    for ($i = 0; $i < $length; $i ++) {
+    for ($i = 0; $i < $length; $i++) {
         // $string .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
         $string .= $chars[mt_rand(0, strlen($chars) - 1)];
     }
@@ -83,8 +81,8 @@ function random($length = 8)
 /**
  * 获取参数
  *
- * @param string $param            
- * @param string $default            
+ * @param string $param
+ * @param string $default
  * @return Ambigous <mixed, string>|Ambigous <multitype:, mixed>
  */
 function param($param = '', $default = '')
@@ -116,8 +114,8 @@ function param($param = '', $default = '')
 /**
  * 创建签名
  *
- * @param array $array            
- * @param string $key            
+ * @param array $array
+ * @param string $key
  * @return string
  */
 function create_sign($array, $signkey = '')
@@ -134,19 +132,18 @@ function create_sign($array, $signkey = '')
  * 写日志文件
  * Write File
  *
- * @param string $text            
- * @param string $file            
- * @param string $append            
+ * @param string $text
+ * @param string $file
+ * @param string $append
  * @return boolean
  */
 function write_file($text = '', $file = 'log.txt', $append = TRUE)
 {
     $text = var_export($text, TRUE);
-    if (strpos($file, '/') === FALSE) {
+    if (strpos($file, '/') === 0) {
+        //return FALSE;
+    } else {
         $file = dirname(__FILE__) . '/' . $file;
-    }
-    if (strpos($file, '/') !== 0) {
-        return FALSE;
     }
     if ($append) {
         $handle = fopen($file, "a+b");
@@ -159,10 +156,30 @@ function write_file($text = '', $file = 'log.txt', $append = TRUE)
 }
 
 /**
+ * @use write_log('abcd', '/data/logs.txt');
+ * @use write_log('abcd', '../logs.txt');
+ * @param string $text
+ * @param string $file
+ * @return bool
+ */
+function write_log($text = '', $file = 'log.log')
+{
+    if (strpos($file, '/') === 0) {
+        //return FALSE;
+    } else {
+        $file = dirname(__FILE__) . '/' . $file;
+    }
+    $handle = fopen($file, "a+b");
+    $text = date('Y-m-d H:i:s') . ' ' . $text . "\r\n";
+    fwrite($handle, $text);
+    fclose($handle);
+}
+
+/**
  * 成功返回
  *
- * @param string $msg            
- * @param string $code            
+ * @param string $msg
+ * @param string $code
  */
 function success($msg, $code = '200')
 {
@@ -177,8 +194,8 @@ function success($msg, $code = '200')
 /**
  * 错误输出
  *
- * @param string $msg            
- * @param string $code            
+ * @param string $msg
+ * @param string $code
  */
 function failure($msg, $code = '202.1')
 {
