@@ -56,4 +56,9 @@ class pdo_class
     {
         return $this->db->exec($sql);
     }
+
+    function lastInsertId()
+    {
+        return $this->db->lastInsertId();
+    }
 }
