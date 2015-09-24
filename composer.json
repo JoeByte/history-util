@@ -15,7 +15,7 @@
     ],
     "support": {
         "email": "joe@xxtime.com",
-        "wiki": "wiki.xxtime.com"
+        "wiki": "http://wiki.xxtime.com"
     },
     "require": {
         "php": ">=5.4.0"
