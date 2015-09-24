@@ -1,13 +1,7 @@
 <?php
+namespace Xxtime;
 
-/**
- * Package  PdoClass.php
- * Author:  joe@xxtime.com
- * Date:    2015-08-02
- * Time:    下午9:13
- * Link:    http://www.xxtime.com
- */
-class PdoClass
+class Pdo
 {
     private $db;
     private $host;
