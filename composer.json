@@ -1,5 +1,5 @@
 {
-	"name": "xxtime/xxtime",
+	"name": "xxtime/util",
 	"description": "The XXTIME TOOLS",
 	"keywords": ["xxtime", "oracle", "mysql"],
 	"license": "MIT",
