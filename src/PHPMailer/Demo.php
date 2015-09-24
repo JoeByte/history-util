@@ -1,5 +1,5 @@
 <?php
-require_once ('class.phpmailer.php');
+require_once('class.phpmailer.php');
 $mail = new PHPMailer();
 $body = '有货了，试试看';
 $mail->CharSet = "UTF-8";
