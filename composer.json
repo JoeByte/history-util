@@ -1,12 +1,22 @@
 {
-	"name": "xxtime/util",
-	"description": "The XXTIME TOOLS",
-	"keywords": ["xxtime", "oracle", "mysql"],
-	"license": "MIT",
-	"require": {
-		"php": ">=5.3.0"
-	},
-	"autoload": {
+    "name": "xxtime/util",
+    "type": "library",
+    "description": "xxtime util tools",
+    "keywords": ["xxtime", "uacool", "util"],
+    "homepage": "https://github.com/xxtime/util",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joe Chu",
+            "email": "joe@xxtime.com",
+            "homepage": "http://www.xxtime.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
 		"classmap": [
 		]
 	}
