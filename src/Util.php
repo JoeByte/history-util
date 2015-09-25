@@ -23,11 +23,11 @@ class Util
         if ($format != 'json') {
             header("Content-type:text/xml");
             $xml = Array2XML::createXML('xml', $data);
-            $out = $xml->saveXML();
+            $output = $xml->saveXML();
         } else {
-            $out = json_encode($data);
+            $output = json_encode($data);
         }
-        exit($out);
+        exit($output);
     }
 
 
